@@ -89,7 +89,7 @@ export const EmissionsPage = () => {
   };
 
   return (
-    <div style={{ padding: '32px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+    <div className="page-container">
       {/* Header Panel */}
       <motion.div 
         initial={{ opacity: 0, y: -10 }}
