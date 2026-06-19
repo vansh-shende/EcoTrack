@@ -1,0 +1,6 @@
+# /jobs — Scheduled & background tasks (cron jobs, queue workers)
+# Offloads heavy or periodic work from the request cycle.
+# Examples:
+#   emissionAggregator.js → Nightly job to pre-compute weekly/monthly totals
+#   reportGenerator.js    → Async PDF generation triggered by a queue
+#   reminderEmail.js      → Weekly carbon-reduction tip emails

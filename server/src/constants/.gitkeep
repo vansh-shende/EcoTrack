@@ -1,0 +1,5 @@
+# /constants — Server-side constant values & enums
+# Examples:
+#   httpStatus.js      → Named HTTP status codes (200, 201, 400, 401, 404, 500)
+#   roles.js           → User role enums (ADMIN, USER, MODERATOR)
+#   errorMessages.js   → Centralized, user-facing error message strings

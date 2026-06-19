@@ -1,0 +1,6 @@
+# /validators — Request payload validation schemas (Joi / Zod / express-validator)
+# Keeps validation rules separate from controllers for reusability and clarity.
+# Examples:
+#   authValidator.js      → loginSchema, registerSchema
+#   emissionValidator.js  → createEmissionSchema, updateEmissionSchema
+#   userValidator.js      → updateProfileSchema

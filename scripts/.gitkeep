@@ -1,0 +1,6 @@
+# /scripts — DevOps & automation scripts
+# Examples:
+#   setup.sh            → One-command project bootstrap (install deps, create DB)
+#   deploy.sh           → Production deployment automation
+#   seed-db.sh          → Populate database with development seed data
+#   docker-compose.yml  → Local multi-container dev environment

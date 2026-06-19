@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* ── Backgrounds ──────────────────────────── */
+  --bg-primary:      #1E1E2E;    /* Page background */
+  --bg-secondary:    #252538;    /* Card backgrounds */
+  --bg-tertiary:     #2D2D44;    /* Hover states, inputs */
+  --bg-navbar:       #151521;    /* Navbar background */
+
+  /* ── Text ─────────────────────────────────── */
+  --text-primary:    #E4E4E7;    /* Main text */
+  --text-secondary:  #A1A1AA;    /* Muted / labels */
+  --text-accent:     #FFFFFF;    /* Headings, emphasis */
+
+  /* ── Accent Colors ───────────────────────── */
+  --accent-green:    #4ADE80;    /* Positive trends, primary CTA */
+  --accent-blue:     #60A5FA;    /* Links, secondary data */
+  --accent-red:      #F87171;    /* Negative trends, errors */
+  --accent-yellow:   #FBBF24;    /* Warnings, stable trends */
+  --accent-purple:   #A78BFA;    /* Insights, AI features */
+
+  /* ── Chart Colors ────────────────────────── */
+  --chart-1:         #4ADE80;    /* Transportation */
+  --chart-2:         #60A5FA;    /* Energy */
+  --chart-3:         #FBBF24;    /* Food */
+  --chart-4:         #A78BFA;    /* Shopping */
+  --chart-5:         #F87171;    /* Waste */
+  --chart-6:         #2DD4BF;    /* Water */
+  --chart-7:         #FB923C;    /* Digital */
+  --chart-8:         #94A3B8;    /* Other */
+
+  /* ── Borders & Shadows ───────────────────── */
+  --border-color:    #303046;
+  --border-radius-sm: 6px;
+  --border-radius:   10px;
+  --border-radius-lg: 16px;
+  --shadow-card:     0 4px 20px rgba(0, 0, 0, 0.3);
+
+  /* ── Spacing ─────────────────────────────── */
+  --gap-xs:          4px;
+  --gap-sm:          8px;
+  --gap-md:          16px;
+  --gap-lg:          24px;
+  --gap-xl:          32px;
+
+  /* ── Typography ──────────────────────────── */
+  --font-family:     'Inter', -apple-system, sans-serif;
+  --font-mono:       'JetBrains Mono', 'Fira Code', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-tertiary);
+}
+
+/* Global utility classes for styling the dashboard */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* VS Code Inspired styling elements */
+.code-font {
+  font-family: var(--font-mono);
+}
+
+a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-green);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-family);
+}
+
+input, select, textarea {
+  font-family: var(--font-family);
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-accent);
+  border-radius: var(--border-radius-sm);
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.15);
+}
+
+/* Grid Layouts */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap-lg);
+  padding: var(--gap-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(12, 1fr);
+  }
+  
+  .col-span-full {
+    grid-column: span 12;
+  }
+  
+  .col-span-8 {
+    grid-column: span 8;
+  }
+  
+  .col-span-6 {
+    grid-column: span 6;
+  }
+  
+  .col-span-4 {
+    grid-column: span 4;
+  }
+}
+
+/* Premium Card Design */
+.card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--gap-lg);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: rgba(74, 222, 128, 0.2);
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+
+/* Form Styles */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin-bottom: var(--gap-md);
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  padding: 10px 18px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  border-radius: var(--border-radius-sm);
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--accent-green);
+  color: #111;
+}
+
+.btn-primary:hover {
+  background-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(74, 222, 128, 0.3);
+}
+
+.btn-secondary {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--border-color);
+}

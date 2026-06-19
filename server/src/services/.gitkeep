@@ -1,0 +1,9 @@
+# /services — Core business logic layer
+# Services are called by controllers and orchestrate models, external APIs,
+# and domain rules. They are framework-agnostic and independently testable.
+# Examples:
+#   authService.js      → Password hashing, JWT generation, token verification
+#   userService.js      → User CRUD, avatar upload processing
+#   emissionService.js  → Emission calculations, aggregation, trend analysis
+#   reportService.js    → Report generation, PDF/CSV export logic
+#   emailService.js     → Transactional email dispatch (welcome, reset password)

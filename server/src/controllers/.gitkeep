@@ -1,0 +1,8 @@
+# /controllers — Request handlers (thin layer between routes and services)
+# Controllers parse incoming requests, call the appropriate service, and send
+# the HTTP response. They should contain NO business logic.
+# Examples:
+#   authController.js      → register, login, logout, refreshToken handlers
+#   userController.js      → getProfile, updateProfile, deleteAccount
+#   emissionController.js  → CRUD for carbon emission entries
+#   reportController.js    → generateReport, getReportById, listReports

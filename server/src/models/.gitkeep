@@ -1,0 +1,8 @@
+# /models — Database schema definitions & ORM model classes
+# Defines the shape of each PostgreSQL table using Sequelize / Prisma / Knex.
+# Examples:
+#   User.js            → id, name, email, passwordHash, role, createdAt
+#   Emission.js        → id, userId, category, value, unit, date, source
+#   Report.js          → id, userId, title, dateRange, generatedAt, fileUrl
+#   Category.js        → id, name, emissionFactor, unit (transport, energy, etc.)
+#   index.js           → Model associations & relationship definitions

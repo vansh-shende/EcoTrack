@@ -1,0 +1,6 @@
+# /utils — Pure utility/helper functions shared across the server
+# Examples:
+#   apiResponse.js     → Standardized success/error response formatter
+#   asyncHandler.js    → try-catch wrapper for async route handlers
+#   pagination.js      → Offset/cursor pagination helper
+#   dateUtils.js       → Date formatting & timezone conversion

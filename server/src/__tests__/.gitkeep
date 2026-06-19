@@ -1,0 +1,3 @@
+# /__tests__ — Backend test suites
+#   unit/        → Isolated tests for services, utils, validators (mocked dependencies)
+#   integration/ → End-to-end API tests hitting real routes with a test database

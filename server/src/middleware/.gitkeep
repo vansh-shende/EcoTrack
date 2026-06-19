@@ -1,0 +1,10 @@
+# /middleware — Express middleware functions (request pipeline interceptors)
+# Middleware runs before controllers to handle cross-cutting concerns.
+# Examples:
+#   authMiddleware.js     → JWT verification & req.user population
+#   errorHandler.js       → Global error-catching middleware (last in chain)
+#   rateLimiter.js        → Request rate limiting per IP / user
+#   requestLogger.js      → HTTP request/response logging
+#   validate.js           → Schema validation runner (ties into /validators)
+#   cors.js               → Custom CORS configuration middleware
+#   upload.js             → Multer file-upload handling

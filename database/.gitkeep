@@ -1,0 +1,4 @@
+# /database — PostgreSQL database management assets
+#   migrations/ → Versioned, incremental DDL scripts (CREATE TABLE, ALTER, etc.)
+#   seeds/      → Sample/initial data for development & testing environments
+#   scripts/    → One-off DB admin scripts (backup, restore, data cleanup)

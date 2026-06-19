@@ -1,0 +1,8 @@
+# /routes — Express Router definitions mapping HTTP verbs → controllers
+# Each resource gets its own route file; an index.js barrel mounts them all.
+# Examples:
+#   index.js          → Mounts all sub-routers under /api/v1
+#   authRoutes.js     → POST /login, POST /register, POST /refresh
+#   userRoutes.js     → GET/PUT /profile, DELETE /account
+#   emissionRoutes.js → GET/POST/PUT/DELETE /emissions
+#   reportRoutes.js   → GET/POST /reports

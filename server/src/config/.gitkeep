@@ -1,0 +1,8 @@
+# /config — Environment-aware application configuration
+# Centralizes all external config (DB, JWT, CORS, rate-limits, third-party keys).
+# Examples:
+#   index.js       → Merges .env values into a typed config object
+#   db.js          → PostgreSQL connection pool (pg / Sequelize / Knex) setup
+#   cors.js        → Allowed origins, methods, headers
+#   logger.js      → Winston/Pino logger transport configuration
+#   redis.js       → Redis client for caching & session store (if applicable)

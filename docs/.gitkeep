@@ -1,0 +1,7 @@
+# /docs — Project documentation
+# Examples:
+#   API.md              → Full REST API reference
+#   ARCHITECTURE.md     → System design & data-flow diagrams
+#   CONTRIBUTING.md     → Contribution guidelines & coding standards
+#   DEPLOYMENT.md       → Deployment runbook (Docker, CI/CD, cloud)
+#   DATABASE_SCHEMA.md  → ER diagram & table descriptions
