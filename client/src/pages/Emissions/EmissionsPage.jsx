@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Calendar, Filter, ChevronLeft, ChevronRight, RefreshCw, Car, Zap, Utensils, ShoppingBag, Trash, Droplet, Monitor, HelpCircle } from 'lucide-react';
 import useEmissions from '../../hooks/useEmissions';
 
 const CATEGORY_META = {
-  transportation: { label: 'Transportation', unit: 'km', factor: 0.18, color: '#60A5FA', icon: Car },
-  energy: { label: 'Energy', unit: 'kWh', factor: 0.45, color: '#FBBF24', icon: Zap },
-  food: { label: 'Diet / Food', unit: 'kg', factor: 2.5, color: '#4ADE80', icon: Utensils },
-  shopping: { label: 'Shopping', unit: 'items', factor: 1.8, color: '#F472B6', icon: ShoppingBag },
-  waste: { label: 'Waste', unit: 'kg', factor: 0.5, color: '#A78BFA', icon: Trash },
-  water: { label: 'Water', unit: 'liters', factor: 0.003, color: '#38BDF8', icon: Droplet },
-  digital: { label: 'Digital', unit: 'hours', factor: 0.05, color: '#FB7185', icon: Monitor },
-  other: { label: 'Other', unit: 'units', factor: 1.0, color: '#9CA3AF', icon: HelpCircle },
+  transportation: { label: 'Transportation', unit: 'km', factor: 0.18, color: '#3B82F6', icon: Car },
+  energy: { label: 'Energy', unit: 'kWh', factor: 0.45, color: '#F59E0B', icon: Zap },
+  food: { label: 'Diet / Food', unit: 'kg', factor: 2.5, color: '#10B981', icon: Utensils },
+  shopping: { label: 'Shopping', unit: 'items', factor: 1.8, color: '#EC4899', icon: ShoppingBag },
+  waste: { label: 'Waste', unit: 'kg', factor: 0.5, color: '#8B5CF6', icon: Trash },
+  water: { label: 'Water', unit: 'liters', factor: 0.003, color: '#06B6D4', icon: Droplet },
+  digital: { label: 'Digital', unit: 'hours', factor: 0.05, color: '#EF4444', icon: Monitor },
+  other: { label: 'Other', unit: 'units', factor: 1.0, color: '#64748B', icon: HelpCircle },
 };
 
 export const EmissionsPage = () => {
@@ -71,28 +72,36 @@ export const EmissionsPage = () => {
   };
 
   // Delete handler with safety confirmations
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this carbon log?')) {
-      try {
-        await deleteLog(id);
-      } catch (err) {
-        alert(err.message || 'Failed to delete carbon log');
-      }
-    }
-  };
+  const [deleteId, setDeleteId] = useState(null);
 
   const currentMeta = CATEGORY_META[formCategory] || CATEGORY_META.other;
   const calculatedCo2Preview = formInputValue ? (parseFloat(formInputValue) * currentMeta.factor).toFixed(2) : '0.00';
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
+  };
+
+  const rowVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
+  };
+
   return (
-    <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+    <div style={{ padding: '32px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
       {/* Header Panel */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
+      <motion.div 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}
+      >
         <div>
-          <h1 style={{ color: '#FFF', fontSize: '28px', fontWeight: '600', letterSpacing: '-0.5px', marginBottom: '4px' }}>
+          <h1 style={{ color: '#FFF', fontSize: '2rem', fontWeight: '700', letterSpacing: '-0.5px', marginBottom: '4px' }}>
             Emissions Ledger
           </h1>
-          <p style={{ color: '#A1A1AA', fontSize: '14px' }}>
+          <p style={{ color: '#A1A1AA', fontSize: '0.9rem' }}>
             Manage, log, and filter your historical carbon activities.
           </p>
         </div>
@@ -104,50 +113,46 @@ export const EmissionsPage = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#1E1E2E',
-              border: '1px solid #2D2D3F',
-              borderRadius: '6px',
+              backgroundColor: '#16161E',
+              border: '1px solid #1C1C28',
+              borderRadius: '8px',
               width: '38px',
               height: '38px',
               cursor: 'pointer',
               color: '#A1A1AA',
               transition: 'all 0.2s',
             }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1C1C28'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#16161E'}
           >
             <RefreshCw size={16} />
           </button>
           
           <button
             onClick={() => setShowModal(true)}
+            className="btn btn-primary"
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              backgroundColor: '#10B981',
-              color: '#FFF',
-              border: 'none',
-              borderRadius: '6px',
-              padding: '0 16px',
+              borderRadius: '8px',
+              padding: '0 18px',
               height: '38px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              boxShadow: '0 2px 4px rgba(16, 185, 129, 0.2)',
-              transition: 'background-color 0.2s',
             }}
           >
             <Plus size={16} /> Log Activity
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Filter and Content Card */}
-      <div style={{ backgroundColor: '#181824', border: '1px solid #232334', borderRadius: '8px', overflow: 'hidden' }}>
+      <div className="card" style={{ padding: 0, overflow: 'hidden', backgroundColor: 'rgba(22, 22, 30, 0.3)' }}>
         
         {/* Filters bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderBottom: '1px solid #232334', flexWrap: 'wrap', gap: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Filter size={16} style={{ color: '#A1A1AA' }} />
-            <span style={{ color: '#E4E4E7', fontSize: '14px', fontWeight: '500' }}>Filter Category:</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', borderBottom: '1px solid #1C1C28', flexWrap: 'wrap', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Filter size={16} style={{ color: '#71717A' }} />
+            <span style={{ color: '#A1A1AA', fontSize: '0.85rem', fontWeight: '500' }}>Category:</span>
             <select
               value={category}
               onChange={(e) => {
@@ -155,14 +160,15 @@ export const EmissionsPage = () => {
                 setPage(1);
               }}
               style={{
-                backgroundColor: '#11111A',
-                border: '1px solid #2A2A3C',
+                backgroundColor: '#16161E',
+                border: '1px solid #1C1C28',
                 color: '#FFF',
-                borderRadius: '6px',
-                padding: '6px 12px',
+                borderRadius: '8px',
+                padding: '6px 14px',
                 outline: 'none',
-                fontSize: '14px',
+                fontSize: '0.85rem',
                 cursor: 'pointer',
+                height: '34px',
               }}
             >
               <option value="">All Categories</option>
@@ -172,118 +178,123 @@ export const EmissionsPage = () => {
             </select>
           </div>
           
-          <div style={{ color: '#A1A1AA', fontSize: '13px' }}>
+          <div style={{ color: '#71717A', fontSize: '0.85rem', fontFamily: 'var(--font-mono)' }}>
             Showing {logs.length} logs of {meta.total} total
           </div>
         </div>
 
         {/* Loading / Error States */}
         {loading && logs.length === 0 ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: '#A1A1AA' }}>
-            <RefreshCw size={24} style={{ animation: 'spin 1.5s linear infinite', marginBottom: '12px' }} />
-            <p>Loading activities...</p>
+          <div style={{ padding: '80px', textAlign: 'center', color: '#A1A1AA' }}>
+            <RefreshCw size={24} style={{ animation: 'spin 1.5s linear infinite', marginBottom: '16px', color: '#10B981' }} />
+            <p style={{ fontSize: '0.9rem' }}>Loading activities...</p>
           </div>
         ) : error ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#EF4444' }}>
-            <p style={{ fontWeight: '500', marginBottom: '8px' }}>Error Loading Logs</p>
-            <p style={{ fontSize: '13px' }}>{error}</p>
+          <div style={{ padding: '60px', textAlign: 'center', color: '#EF4444' }}>
+            <p style={{ fontWeight: '600', marginBottom: '8px' }}>Error Loading Logs</p>
+            <p style={{ fontSize: '0.85rem' }}>{error}</p>
           </div>
         ) : logs.length === 0 ? (
-          <div style={{ padding: '80px 20px', textAlign: 'center', color: '#A1A1AA' }}>
-            <Calendar size={48} style={{ opacity: 0.15, marginBottom: '16px' }} />
-            <h3 style={{ color: '#FFF', fontWeight: '500', marginBottom: '6px' }}>No Activity Records Found</h3>
-            <p style={{ fontSize: '14px', maxWidth: '360px', margin: '0 auto' }}>
+          <div style={{ padding: '100px 24px', textAlign: 'center', color: '#71717A' }}>
+            <Calendar size={48} style={{ opacity: 0.15, marginBottom: '20px' }} />
+            <h3 style={{ color: '#FFF', fontWeight: '600', marginBottom: '8px', fontSize: '1.1rem' }}>No Activity Records Found</h3>
+            <p style={{ fontSize: '0.875rem', maxWidth: '380px', margin: '0 auto', lineHeight: '1.5' }}>
               Add a new carbon record to start tracking your footprint history.
             </p>
           </div>
         ) : (
           /* Table Ledger */
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '700px' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid #232334', backgroundColor: '#13131F' }}>
-                  <th style={{ padding: '14px 16px', color: '#8E8E93', fontSize: '12px', fontWeight: '600', textTransform: 'uppercase' }}>Category</th>
-                  <th style={{ padding: '14px 16px', color: '#8E8E93', fontSize: '12px', fontWeight: '600', textTransform: 'uppercase' }}>Log Date</th>
-                  <th style={{ padding: '14px 16px', color: '#8E8E93', fontSize: '12px', fontWeight: '600', textTransform: 'uppercase', textAlign: 'right' }}>Logged Value</th>
-                  <th style={{ padding: '14px 16px', color: '#8E8E93', fontSize: '12px', fontWeight: '600', textTransform: 'uppercase', textAlign: 'right' }}>Calculated CO₂e</th>
-                  <th style={{ padding: '14px 16px', color: '#8E8E93', fontSize: '12px', fontWeight: '600', textTransform: 'uppercase', textAlign: 'center' }}>Actions</th>
+                <tr style={{ borderBottom: '1px solid #1C1C28', backgroundColor: '#0F0F14' }}>
+                  <th style={{ padding: '16px 24px', color: '#71717A', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Category</th>
+                  <th style={{ padding: '16px 24px', color: '#71717A', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Log Date</th>
+                  <th style={{ padding: '16px 24px', color: '#71717A', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'right' }}>Logged Value</th>
+                  <th style={{ padding: '16px 24px', color: '#71717A', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'right' }}>Calculated CO₂e</th>
+                  <th style={{ padding: '16px 24px', color: '#71717A', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'center' }}>Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <motion.tbody
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+              >
                 {logs.map((log) => {
                   const metaInfo = CATEGORY_META[log.category] || CATEGORY_META.other;
                   const IconComponent = metaInfo.icon;
                   return (
-                    <tr 
+                    <motion.tr 
+                      variants={rowVariants}
                       key={log.log_id} 
                       style={{ 
-                        borderBottom: '1px solid #1D1D2B', 
+                        borderBottom: '1px solid #16161E', 
                         transition: 'background-color 0.2s',
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1C1C2B'}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.015)'}
                       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                     >
-                      <td style={{ padding: '14px 16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <td style={{ padding: '16px 24px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                           <div style={{ 
-                            width: '32px', 
-                            height: '32px', 
-                            borderRadius: '6px', 
-                            backgroundColor: `rgba(${parseInt(metaInfo.color.slice(1,3),16)}, ${parseInt(metaInfo.color.slice(3,5),16)}, ${parseInt(metaInfo.color.slice(5,7),16)}, 0.1)`, 
+                            width: '34px', 
+                            height: '34px', 
+                            borderRadius: '8px', 
+                            backgroundColor: `${metaInfo.color}15`, 
                             display: 'flex', 
                             alignItems: 'center', 
                             justifyContent: 'center',
-                            border: `1px solid ${metaInfo.color}33`,
+                            border: `1px solid ${metaInfo.color}25`,
                           }}>
                             <IconComponent size={16} style={{ color: metaInfo.color }} />
                           </div>
-                          <span style={{ color: '#FFF', fontWeight: '500', fontSize: '14px' }}>{metaInfo.label}</span>
+                          <span style={{ color: '#FFF', fontWeight: '600', fontSize: '0.9rem' }}>{metaInfo.label}</span>
                         </div>
                       </td>
-                      <td style={{ padding: '14px 16px', color: '#E4E4E7', fontSize: '14px' }}>
+                      <td style={{ padding: '16px 24px', color: '#A1A1AA', fontSize: '0.85rem' }}>
                         {new Date(log.log_date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                       </td>
-                      <td style={{ padding: '14px 16px', color: '#FFF', fontSize: '14px', fontWeight: '600', textAlign: 'right' }}>
-                        {parseFloat(log.input_value).toLocaleString()} <span style={{ color: '#8E8E93', fontSize: '12px', fontWeight: '400' }}>{metaInfo.unit}</span>
+                      <td style={{ padding: '16px 24px', color: '#FFF', fontSize: '0.9rem', fontWeight: '600', textAlign: 'right' }}>
+                        {parseFloat(log.input_value).toLocaleString()} <span style={{ color: '#71717A', fontSize: '0.8rem', fontWeight: '400' }}>{metaInfo.unit}</span>
                       </td>
-                      <td style={{ padding: '14px 16px', color: '#EF4444', fontSize: '14px', fontWeight: '700', textAlign: 'right' }}>
-                        {parseFloat(log.calculated_co2).toFixed(2)} <span style={{ fontSize: '11px', fontWeight: '400', color: '#8E8E93' }}>kg</span>
+                      <td style={{ padding: '16px 24px', color: '#EF4444', fontSize: '0.9rem', fontWeight: '700', textAlign: 'right', fontFamily: 'var(--font-mono)' }}>
+                        {parseFloat(log.calculated_co2).toFixed(2)} <span style={{ fontSize: '11px', fontWeight: '400', color: '#71717A' }}>kg</span>
                       </td>
-                      <td style={{ padding: '14px 16px', textAlign: 'center' }}>
+                      <td style={{ padding: '16px 24px', textAlign: 'center' }}>
                         <button
-                          onClick={() => handleDelete(log.log_id)}
+                          onClick={() => setDeleteId(log.log_id)}
                           style={{
                             backgroundColor: 'transparent',
                             border: 'none',
-                            color: '#A1A1AA',
+                            color: '#71717A',
                             cursor: 'pointer',
                             padding: '6px',
-                            borderRadius: '4px',
+                            borderRadius: '6px',
                             transition: 'all 0.2s',
                           }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.color = '#EF4444';
-                            e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                            e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.08)';
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.color = '#A1A1AA';
+                            e.currentTarget.style.color = '#71717A';
                             e.currentTarget.style.backgroundColor = 'transparent';
                           }}
                         >
                           <Trash2 size={16} />
                         </button>
                       </td>
-                    </tr>
+                    </motion.tr>
                   );
                 })}
-              </tbody>
+              </motion.tbody>
             </table>
           </div>
         )}
 
         {/* Pagination Panel */}
         {meta.totalPages > 1 && (
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderTop: '1px solid #232334', backgroundColor: '#13131F' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', borderTop: '1px solid #1C1C28', backgroundColor: '#0F0F14' }}>
             <button
               disabled={page <= 1}
               onClick={() => setPage(page - 1)}
@@ -291,19 +302,22 @@ export const EmissionsPage = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                backgroundColor: page <= 1 ? 'transparent' : '#181824',
-                border: '1px solid #2D2D3F',
-                borderRadius: '6px',
+                backgroundColor: page <= 1 ? 'transparent' : '#16161E',
+                border: '1px solid #1C1C28',
+                borderRadius: '8px',
                 color: page <= 1 ? '#4E4E5E' : '#FFF',
-                padding: '6px 12px',
+                padding: '8px 16px',
                 cursor: page <= 1 ? 'not-allowed' : 'pointer',
-                fontSize: '13px',
+                fontSize: '0.85rem',
+                transition: 'all 0.2s',
               }}
+              onMouseEnter={(e) => { if (page > 1) e.target.style.backgroundColor = '#1C1C28'; }}
+              onMouseLeave={(e) => { if (page > 1) e.target.style.backgroundColor = '#16161E'; }}
             >
               <ChevronLeft size={16} /> Previous
             </button>
             
-            <span style={{ color: '#A1A1AA', fontSize: '13px' }}>
+            <span style={{ color: '#71717A', fontSize: '0.85rem', fontFamily: 'var(--font-mono)' }}>
               Page {page} of {meta.totalPages}
             </span>
             
@@ -314,14 +328,17 @@ export const EmissionsPage = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                backgroundColor: page >= meta.totalPages ? 'transparent' : '#181824',
-                border: '1px solid #2D2D3F',
-                borderRadius: '6px',
+                backgroundColor: page >= meta.totalPages ? 'transparent' : '#16161E',
+                border: '1px solid #1C1C28',
+                borderRadius: '8px',
                 color: page >= meta.totalPages ? '#4E4E5E' : '#FFF',
-                padding: '6px 12px',
+                padding: '8px 16px',
                 cursor: page >= meta.totalPages ? 'not-allowed' : 'pointer',
-                fontSize: '13px',
+                fontSize: '0.85rem',
+                transition: 'all 0.2s',
               }}
+              onMouseEnter={(e) => { if (page < meta.totalPages) e.target.style.backgroundColor = '#1C1C28'; }}
+              onMouseLeave={(e) => { if (page < meta.totalPages) e.target.style.backgroundColor = '#16161E'; }}
             >
               Next <ChevronRight size={16} />
             </button>
@@ -329,187 +346,310 @@ export const EmissionsPage = () => {
         )}
       </div>
 
-      {/* Modal Dialog */}
-      {showModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.7)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: '20px',
-        }}>
-          <div style={{
-            backgroundColor: '#1E1E2F',
-            border: '1px solid #2E2E42',
-            borderRadius: '8px',
-            width: '100%',
-            maxWidth: '460px',
-            overflow: 'hidden',
-          }}>
-            {/* Modal Header */}
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #2E2E42', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ color: '#FFF', fontSize: '18px', fontWeight: '600' }}>Log Carbon Activity</h3>
-              <button 
-                onClick={() => {
-                  setShowModal(false);
-                  setFormInputValue('');
-                }}
-                style={{ backgroundColor: 'transparent', border: 'none', color: '#A1A1AA', cursor: 'pointer', fontSize: '20px' }}
-              >
-                &times;
-              </button>
-            </div>
-            
-            {/* Modal Body / Form */}
-            <form onSubmit={handleAddLog} style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {formError && (
-                <div style={{ padding: '10px 14px', backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '6px', color: '#EF4444', fontSize: '13px' }}>
-                  {formError}
-                </div>
-              )}
-
-              {/* Category */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ color: '#A1A1AA', fontSize: '13px', fontWeight: '500' }}>Activity Category</label>
-                <select
-                  value={formCategory}
-                  onChange={(e) => setFormCategory(e.target.value)}
-                  style={{
-                    backgroundColor: '#11111A',
-                    border: '1px solid #2D2D42',
-                    borderRadius: '6px',
-                    color: '#FFF',
-                    padding: '10px',
-                    outline: 'none',
-                    fontSize: '14px',
-                  }}
-                >
-                  {Object.keys(CATEGORY_META).map((key) => (
-                    <option key={key} value={key}>{CATEGORY_META[key].label}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Input Value */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ color: '#A1A1AA', fontSize: '13px', fontWeight: '500' }}>
-                  Logged Amount ({currentMeta.unit})
-                </label>
-                <div style={{ position: 'relative' }}>
-                  <input
-                    type="number"
-                    step="any"
-                    required
-                    placeholder={`e.g. 15`}
-                    value={formInputValue}
-                    onChange={(e) => setFormInputValue(e.target.value)}
-                    style={{
-                      backgroundColor: '#11111A',
-                      border: '1px solid #2D2D42',
-                      borderRadius: '6px',
-                      color: '#FFF',
-                      padding: '10px 60px 10px 10px',
-                      width: '100%',
-                      boxSizing: 'border-box',
-                      fontSize: '14px',
-                      outline: 'none',
-                    }}
-                  />
-                  <span style={{ position: 'absolute', right: '12px', top: '10px', color: '#A1A1AA', fontSize: '13px' }}>
-                    {currentMeta.unit}
-                  </span>
-                </div>
-              </div>
-
-              {/* Log Date */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ color: '#A1A1AA', fontSize: '13px', fontWeight: '500' }}>Activity Date</label>
-                <input
-                  type="date"
-                  required
-                  max={new Date().toISOString().split('T')[0]}
-                  value={formDate}
-                  onChange={(e) => setFormDate(e.target.value)}
-                  style={{
-                    backgroundColor: '#11111A',
-                    border: '1px solid #2D2D42',
-                    borderRadius: '6px',
-                    color: '#FFF',
-                    padding: '10px',
-                    fontSize: '14px',
-                    outline: 'none',
-                    width: '100%',
-                    boxSizing: 'border-box',
-                  }}
-                />
-              </div>
-
-              {/* Real-time Calculation Panel */}
-              <div style={{ 
-                backgroundColor: '#13131F', 
-                border: '1px dashed #2A2A3E', 
-                borderRadius: '6px', 
-                padding: '14px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-                <span style={{ color: '#8E8E93', fontSize: '13px' }}>Estimated CO₂e Output:</span>
-                <span style={{ color: '#EF4444', fontSize: '16px', fontWeight: '700' }}>
-                  {calculatedCo2Preview} kg
-                </span>
-              </div>
-
-              {/* Action Buttons */}
-              <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
-                <button
-                  type="button"
+      {/* Modal Dialog (Framer Motion) */}
+      <AnimatePresence>
+        {showModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(9, 9, 11, 0.8)',
+              backdropFilter: 'blur(12px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000,
+              padding: '20px',
+            }}
+          >
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="card"
+              style={{
+                width: '100%',
+                maxWidth: '480px',
+                overflow: 'hidden',
+                padding: '32px',
+                background: '#0F0F14',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+              }}
+            >
+              {/* Modal Header */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <h3 style={{ color: '#FFF', fontSize: '1.2rem', fontWeight: '700', letterSpacing: '-0.5px' }}>Log Carbon Activity</h3>
+                <button 
                   onClick={() => {
                     setShowModal(false);
                     setFormInputValue('');
                   }}
+                  style={{ backgroundColor: 'transparent', border: 'none', color: '#71717A', cursor: 'pointer', fontSize: '24px', padding: 0 }}
+                  onMouseEnter={(e) => e.target.style.color = '#FFF'}
+                  onMouseLeave={(e) => e.target.style.color = '#71717A'}
+                >
+                  &times;
+                </button>
+              </div>
+              
+              {/* Modal Body / Form */}
+              <form onSubmit={handleAddLog} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                {formError && (
+                  <div style={{ padding: '10px 14px', backgroundColor: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.15)', borderRadius: '8px', color: '#EF4444', fontSize: '13px' }}>
+                    {formError}
+                  </div>
+                )}
+
+                {/* Category */}
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ marginBottom: '8px', display: 'block' }}>Activity Category</label>
+                  <select
+                    value={formCategory}
+                    onChange={(e) => setFormCategory(e.target.value)}
+                    style={{
+                      backgroundColor: '#16161E',
+                      border: '1px solid #1C1C28',
+                      borderRadius: '8px',
+                      color: '#FFF',
+                      padding: '10px 12px',
+                      outline: 'none',
+                      fontSize: '14px',
+                      width: '100%',
+                      height: '42px',
+                    }}
+                  >
+                    {Object.keys(CATEGORY_META).map((key) => (
+                      <option key={key} value={key}>{CATEGORY_META[key].label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Input Value */}
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ marginBottom: '8px', display: 'block' }}>
+                    Logged Amount ({currentMeta.unit})
+                  </label>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type="number"
+                      step="any"
+                      required
+                      placeholder={`e.g. 15`}
+                      value={formInputValue}
+                      onChange={(e) => setFormInputValue(e.target.value)}
+                      style={{
+                        backgroundColor: '#16161E',
+                        border: '1px solid #1C1C28',
+                        borderRadius: '8px',
+                        color: '#FFF',
+                        padding: '10px 60px 10px 14px',
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        fontSize: '14px',
+                        outline: 'none',
+                        height: '42px',
+                      }}
+                    />
+                    <span style={{ position: 'absolute', right: '14px', top: '11px', color: '#71717A', fontSize: '13px', fontWeight: '600' }}>
+                      {currentMeta.unit}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Log Date */}
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ marginBottom: '8px', display: 'block' }}>Activity Date</label>
+                  <input
+                    type="date"
+                    required
+                    max={new Date().toISOString().split('T')[0]}
+                    value={formDate}
+                    onChange={(e) => setFormDate(e.target.value)}
+                    style={{
+                      backgroundColor: '#16161E',
+                      border: '1px solid #1C1C28',
+                      borderRadius: '8px',
+                      color: '#FFF',
+                      padding: '10px 12px',
+                      fontSize: '14px',
+                      outline: 'none',
+                      width: '100%',
+                      boxSizing: 'border-box',
+                      height: '42px',
+                    }}
+                  />
+                </div>
+
+                {/* Real-time Calculation Panel */}
+                <div style={{ 
+                  backgroundColor: '#16161E', 
+                  border: '1px dashed #242435', 
+                  borderRadius: '8px', 
+                  padding: '16px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                  <span style={{ color: '#A1A1AA', fontSize: '0.85rem' }}>Estimated CO₂e Output:</span>
+                  <span style={{ color: '#EF4444', fontSize: '1.1rem', fontWeight: '700', fontFamily: 'var(--font-mono)' }}>
+                    {calculatedCo2Preview} kg
+                  </span>
+                </div>
+
+                {/* Action Buttons */}
+                <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowModal(false);
+                      setFormInputValue('');
+                    }}
+                    style={{
+                      flex: 1,
+                      backgroundColor: '#16161E',
+                      border: '1px solid #1C1C28',
+                      borderRadius: '8px',
+                      color: '#A1A1AA',
+                      padding: '10px 0',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={(e) => { e.target.style.backgroundColor = '#1C1C28'; e.target.style.color = '#FFF'; }}
+                    onMouseLeave={(e) => { e.target.style.backgroundColor = '#16161E'; e.target.style.color = '#A1A1AA'; }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="btn btn-primary"
+                    style={{
+                      flex: 1,
+                      borderRadius: '8px',
+                      padding: '10px 0',
+                      height: '42px',
+                    }}
+                  >
+                    {submitting ? 'Submitting...' : 'Log Activity'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {deleteId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(9, 9, 11, 0.8)',
+              backdropFilter: 'blur(12px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000,
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="card"
+              style={{
+                width: '90%',
+                maxWidth: '420px',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)',
+                padding: '32px',
+                background: '#0F0F14',
+              }}
+            >
+              <h3 style={{ margin: '0 0 12px 0', color: '#EF4444', fontSize: '1.25rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                ⚠️ Delete Activity Log
+              </h3>
+              <p style={{ margin: '0 0 28px 0', color: '#A1A1AA', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                Are you sure you want to permanently delete this emission log entry? This action cannot be undone.
+              </p>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                <button
+                  onClick={() => setDeleteId(null)}
                   style={{
-                    flex: 1,
-                    backgroundColor: 'transparent',
-                    border: '1px solid #2D2D42',
-                    borderRadius: '6px',
-                    color: '#FFF',
-                    padding: '10px 0',
+                    backgroundColor: '#1C1C28',
+                    border: '1px solid #242435',
+                    color: '#A1A1AA',
+                    padding: '10px 18px',
+                    borderRadius: '8px',
+                    fontSize: '0.9rem',
                     cursor: 'pointer',
-                    fontSize: '14px',
+                    fontWeight: '500',
+                    transition: 'all 0.2s',
                   }}
+                  onMouseEnter={(e) => { e.target.style.backgroundColor = '#242435'; e.target.style.color = '#FFF'; }}
+                  onMouseLeave={(e) => { e.target.style.backgroundColor = '#1C1C28'; e.target.style.color = '#A1A1AA'; }}
                 >
                   Cancel
                 </button>
                 <button
-                  type="submit"
-                  disabled={submitting}
-                  style={{
-                    flex: 1,
-                    backgroundColor: '#10B981',
-                    border: 'none',
-                    borderRadius: '6px',
-                    color: '#FFF',
-                    padding: '10px 0',
-                    fontWeight: '600',
-                    cursor: submitting ? 'not-allowed' : 'pointer',
-                    fontSize: '14px',
+                  onClick={async () => {
+                    try {
+                      await deleteLog(deleteId);
+                    } catch (err) {
+                      console.error('Failed to delete carbon log:', err);
+                      alert(err.message || 'Failed to delete log entry.');
+                    } finally {
+                      setDeleteId(null);
+                    }
                   }}
+                  style={{
+                    backgroundColor: '#EF4444',
+                    border: 'none',
+                    color: '#FFF',
+                    padding: '10px 18px',
+                    borderRadius: '8px',
+                    fontSize: '0.9rem',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    transition: 'background-color 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#DC2626'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = '#EF4444'}
                 >
-                  {submitting ? 'Submitting...' : 'Log Activity'}
+                  Delete Log
                 </button>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <style>{`
+        .spin {
+          animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };

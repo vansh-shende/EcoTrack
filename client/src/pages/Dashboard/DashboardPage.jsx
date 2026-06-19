@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import useDashboard from '../../hooks/useDashboard';
 import SummaryCards from './SummaryCards';
 import TrendLineChart from '../../components/charts/TrendLineChart';
@@ -31,24 +32,43 @@ export const DashboardPage = () => {
     setDeleteLogId(logId);
   };
 
+  // Framer Motion Variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } },
+  };
+
   return (
-    <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
+    <div style={{ padding: '32px', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
       {/* HEADER SECTION */}
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '24px',
+          marginBottom: '32px',
           flexWrap: 'wrap',
           gap: '16px',
         }}
       >
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: '700', color: '#FFF', letterSpacing: '-0.5px', margin: 0 }}>
+          <h1 style={{ fontSize: '2rem', fontWeight: '700', color: '#FFF', letterSpacing: '-0.5px', margin: 0 }}>
             Carbon Analytics
           </h1>
-          <p style={{ color: '#A1A1AA', fontSize: '0.85rem', marginTop: '4px' }}>
+          <p style={{ color: '#A1A1AA', fontSize: '0.9rem', marginTop: '4px' }}>
             Monitor, measure, and minimize your environmental footprint
           </p>
         </div>
@@ -60,16 +80,19 @@ export const DashboardPage = () => {
             onClick={refresh}
             disabled={loading}
             style={{
-              backgroundColor: '#252538',
-              border: '1px solid #303046',
+              backgroundColor: '#16161E',
+              border: '1px solid #1C1C28',
               color: '#A1A1AA',
               padding: '10px',
-              borderRadius: '6px',
+              borderRadius: '8px',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              transition: 'all 0.2s',
             }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#1C1C28'; e.currentTarget.style.color = '#FFF'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#16161E'; e.currentTarget.style.color = '#A1A1AA'; }}
             title="Refresh dashboard"
           >
             <RotateCw size={16} className={loading ? 'spin' : ''} />
@@ -77,18 +100,21 @@ export const DashboardPage = () => {
 
           {/* PERIOD SELECTOR */}
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <Calendar size={16} style={{ position: 'absolute', left: '12px', color: '#A1A1AA', pointerEvents: 'none' }} />
+            <Calendar size={16} style={{ position: 'absolute', left: '14px', color: '#A1A1AA', pointerEvents: 'none' }} />
             <select
               value={period}
               onChange={(e) => setPeriod(e.target.value)}
               style={{
-                paddingLeft: '36px',
-                backgroundColor: '#252538',
+                paddingLeft: '38px',
+                backgroundColor: '#16161E',
                 color: '#FFF',
-                border: '1px solid #303046',
-                borderRadius: '6px',
+                border: '1px solid #1C1C28',
+                borderRadius: '8px',
                 fontSize: '0.9rem',
                 cursor: 'pointer',
+                height: '38px',
+                appearance: 'none',
+                paddingRight: '16px',
               }}
             >
               <option value="week">Past Week</option>
@@ -101,28 +127,30 @@ export const DashboardPage = () => {
           <button
             onClick={() => setIsModalOpen(true)}
             className="btn btn-primary"
-            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '38px', borderRadius: '8px' }}
           >
             <Plus size={16} /> Log Activity
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* ERROR MESSAGE DISPLAY */}
       {error && (
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
           style={{
-            backgroundColor: 'rgba(248, 113, 113, 0.1)',
-            border: '1px solid #F87171',
+            backgroundColor: 'rgba(239, 68, 68, 0.08)',
+            border: '1px solid rgba(239, 68, 68, 0.2)',
             color: '#F87171',
             padding: '16px',
-            borderRadius: '8px',
+            borderRadius: '12px',
             fontSize: '0.9rem',
             marginBottom: '24px',
           }}
         >
           {error}
-        </div>
+        </motion.div>
       )}
 
       {/* DASHBOARD CONTENT GRID */}
@@ -143,59 +171,66 @@ export const DashboardPage = () => {
             style={{
               width: '32px',
               height: '32px',
-              border: '3px solid #2D2D44',
-              borderTopColor: '#4ADE80',
+              border: '3px solid #1C1C28',
+              borderTopColor: '#10B981',
               borderRadius: '50%',
               animation: 'spin 1s linear infinite',
-              marginBottom: '12px',
+              marginBottom: '16px',
             }}
           />
-          <span>Aggregating analytics data...</span>
+          <span>Aggregating carbon analytics...</span>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
+        >
           {/* Row 1: Summary Stats */}
-          <SummaryCards summary={summary} />
+          <motion.div variants={itemVariants}>
+            <SummaryCards summary={summary} />
+          </motion.div>
 
           {/* Row 2: Charts (Trend & Category) */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
             {/* Trend Chart */}
-            <div className="card">
+            <motion.div variants={itemVariants} className="card">
               <div className="card-title">
                 <span>Carbon Emission Trend</span>
               </div>
               <TrendLineChart data={trends?.series || []} />
-            </div>
+            </motion.div>
 
             {/* Breakdown Chart */}
-            <div className="card">
+            <motion.div variants={itemVariants} className="card">
               <div className="card-title">
                 <span>Emission Distribution</span>
               </div>
               <CategoryPieChart data={breakdown?.categories || []} />
-            </div>
+            </motion.div>
           </div>
 
           {/* Row 3: Weekly comparison & recent activity logs */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
             {/* Weekly Bar Chart */}
-            <div className="card">
+            <motion.div variants={itemVariants} className="card">
               <div className="card-title">
                 <span>Weekly Carbon footprint comparison</span>
               </div>
               <WeeklyBarChart logs={activities} />
-            </div>
+            </motion.div>
 
             {/* Recent Activity Table */}
-            <RecentActivity
-              activities={activities}
-              onAddLog={() => setIsModalOpen(true)}
-              onDeleteLog={handleDeleteLog}
-            />
+            <motion.div variants={itemVariants}>
+              <RecentActivity
+                activities={activities}
+                onAddLog={() => setIsModalOpen(true)}
+                onDeleteLog={handleDeleteLog}
+              />
+            </motion.div>
           </div>
-
-        </div>
+        </motion.div>
       )}
 
       {/* POPUP MODAL FOR CARBON ENTRY */}
@@ -206,90 +241,99 @@ export const DashboardPage = () => {
       />
 
       {/* CUSTOM CONFIRMATION MODAL FOR DELETION */}
-      {deleteLogId && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(10, 10, 15, 0.85)',
-            backdropFilter: 'blur(8px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-          }}
-        >
-          <div
-            className="card"
+      <AnimatePresence>
+        {deleteLogId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             style={{
-              width: '90%',
-              maxWidth: '400px',
-              border: '1px solid #3F3F56',
-              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5)',
-              padding: '24px',
-              animation: 'modalSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(9, 9, 11, 0.8)',
+              backdropFilter: 'blur(12px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000,
             }}
           >
-            <h3 style={{ margin: '0 0 12px 0', color: '#F87171', fontSize: '1.2rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              ⚠️ Delete Activity Log
-            </h3>
-            <p style={{ margin: '0 0 24px 0', color: '#D1D5DB', fontSize: '0.9rem', lineHeight: '1.5' }}>
-              Are you sure you want to permanently delete this emission log entry? This action cannot be undone.
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-              <button
-                onClick={() => setDeleteLogId(null)}
-                style={{
-                  backgroundColor: '#252538',
-                  border: '1px solid #303046',
-                  color: '#A1A1AA',
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  fontSize: '0.9rem',
-                  cursor: 'pointer',
-                  fontWeight: '500',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => { e.target.style.backgroundColor = '#2D2D44'; e.target.style.color = '#FFF'; }}
-                onMouseLeave={(e) => { e.target.style.backgroundColor = '#252538'; e.target.style.color = '#A1A1AA'; }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={async () => {
-                  try {
-                    await api.delete(`/emissions/${deleteLogId}`);
-                    refresh();
-                  } catch (err) {
-                    console.error('Failed to delete carbon log:', err);
-                    alert(err.message || 'Failed to delete log entry.');
-                  } finally {
-                    setDeleteLogId(null);
-                  }
-                }}
-                style={{
-                  backgroundColor: '#EF4444',
-                  border: 'none',
-                  color: '#FFF',
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  fontSize: '0.9rem',
-                  cursor: 'pointer',
-                  fontWeight: '500',
-                  transition: 'background-color 0.2s',
-                }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#DC2626'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = '#EF4444'}
-              >
-                Delete Log
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="card"
+              style={{
+                width: '90%',
+                maxWidth: '420px',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)',
+                padding: '32px',
+                background: '#0F0F14',
+              }}
+            >
+              <h3 style={{ margin: '0 0 12px 0', color: '#EF4444', fontSize: '1.25rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                ⚠️ Delete Activity Log
+              </h3>
+              <p style={{ margin: '0 0 28px 0', color: '#A1A1AA', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                Are you sure you want to permanently delete this emission log entry? This action cannot be undone.
+              </p>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                <button
+                  onClick={() => setDeleteLogId(null)}
+                  style={{
+                    backgroundColor: '#1C1C28',
+                    border: '1px solid #242435',
+                    color: '#A1A1AA',
+                    padding: '10px 18px',
+                    borderRadius: '8px',
+                    fontSize: '0.9rem',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={(e) => { e.target.style.backgroundColor = '#242435'; e.target.style.color = '#FFF'; }}
+                  onMouseLeave={(e) => { e.target.style.backgroundColor = '#1C1C28'; e.target.style.color = '#A1A1AA'; }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    try {
+                      await api.delete(`/emissions/${deleteLogId}`);
+                      refresh();
+                    } catch (err) {
+                      console.error('Failed to delete carbon log:', err);
+                      alert(err.message || 'Failed to delete log entry.');
+                    } finally {
+                      setDeleteLogId(null);
+                    }
+                  }}
+                  style={{
+                    backgroundColor: '#EF4444',
+                    border: 'none',
+                    color: '#FFF',
+                    padding: '10px 18px',
+                    borderRadius: '8px',
+                    fontSize: '0.9rem',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    transition: 'background-color 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#DC2626'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = '#EF4444'}
+                >
+                  Delete Log
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <style>{`
         .spin {
@@ -297,16 +341,6 @@ export const DashboardPage = () => {
         }
         @keyframes spin {
           to { transform: rotate(360deg); }
-        }
-        @keyframes modalSlideIn {
-          from {
-            transform: translateY(15px);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
         }
       `}</style>
     </div>

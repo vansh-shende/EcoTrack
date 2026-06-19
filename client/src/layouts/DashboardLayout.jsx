@@ -1,12 +1,12 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Navbar from '../components/common/Navbar';
+import Sidebar from '../components/common/Sidebar';
 
 export const DashboardLayout = () => {
   return (
-    <div className="app-container">
-      <Navbar />
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+    <div className="app-container" style={{ display: 'flex' }}>
+      <Sidebar />
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflowY: 'auto' }}>
         <Outlet />
       </main>
     </div>

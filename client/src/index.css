@@ -1,40 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  /* ── Backgrounds ──────────────────────────── */
-  --bg-primary:      #1E1E2E;    /* Page background */
-  --bg-secondary:    #252538;    /* Card backgrounds */
-  --bg-tertiary:     #2D2D44;    /* Hover states, inputs */
-  --bg-navbar:       #151521;    /* Navbar background */
+  /* ── Core Surfaces ─────────────────────────── */
+  --surface-0:       #09090B;    /* App background (near-black) */
+  --surface-1:       #0F0F14;    /* Sidebar / navbar background */
+  --surface-2:       #16161E;    /* Card background */
+  --surface-3:       #1C1C28;    /* Elevated card / modal */
+  --surface-4:       #232334;    /* Hover states, inputs */
+  --border-color:    #242435;    /* Border line color */
 
-  /* ── Text ─────────────────────────────────── */
-  --text-primary:    #E4E4E7;    /* Main text */
-  --text-secondary:  #A1A1AA;    /* Muted / labels */
-  --text-accent:     #FFFFFF;    /* Headings, emphasis */
+  /* ── Glass Effects ─────────────────────────── */
+  --glass-bg:        rgba(255, 255, 255, 0.02);
+  --glass-border:    rgba(255, 255, 255, 0.05);
+  --glass-hover:     rgba(255, 255, 255, 0.08);
+  --glass-blur:      12px;
 
-  /* ── Accent Colors ───────────────────────── */
-  --accent-green:    #4ADE80;    /* Positive trends, primary CTA */
-  --accent-blue:     #60A5FA;    /* Links, secondary data */
-  --accent-red:      #F87171;    /* Negative trends, errors */
-  --accent-yellow:   #FBBF24;    /* Warnings, stable trends */
-  --accent-purple:   #A78BFA;    /* Insights, AI features */
+  /* ── Text Hierarchy ────────────────────────── */
+  --text-primary:    #F4F4F5;    /* Main text */
+  --text-secondary:  #A1A1AA;    /* Secondary / labels */
+  --text-muted:      #71717A;    /* Muted text */
+  --text-accent:     #FFFFFF;    /* White emphasis */
+
+  /* ── Brand Accent (Emerald) ────────────────── */
+  --accent-green:    #10B981;    /* Primary CTA, positive trends */
+  --accent-blue:     #3B82F6;    /* Secondary links / info */
+  --accent-red:      #EF4444;    /* Errors / high emissions */
+  --accent-yellow:   #F59E0B;    /* Warning / moderate emissions */
+  --accent-purple:   #8B5CF6;    /* Premium / AI features */
 
   /* ── Chart Colors ────────────────────────── */
-  --chart-1:         #4ADE80;    /* Transportation */
-  --chart-2:         #60A5FA;    /* Energy */
-  --chart-3:         #FBBF24;    /* Food */
-  --chart-4:         #A78BFA;    /* Shopping */
-  --chart-5:         #F87171;    /* Waste */
-  --chart-6:         #2DD4BF;    /* Water */
-  --chart-7:         #FB923C;    /* Digital */
-  --chart-8:         #94A3B8;    /* Other */
+  --chart-1:         #10B981;    /* Transportation */
+  --chart-2:         #3B82F6;    /* Energy */
+  --chart-3:         #F59E0B;    /* Food */
+  --chart-4:         #EC4899;    /* Shopping */
+  --chart-5:         #EF4444;    /* Waste */
+  --chart-6:         #06B6D4;    /* Water */
+  --chart-7:         #8B5CF6;    /* Digital */
+  --chart-8:         #64748B;    /* Other */
 
-  /* ── Borders & Shadows ───────────────────── */
-  --border-color:    #303046;
+  /* ── Layout & Borders ────────────────────── */
   --border-radius-sm: 6px;
-  --border-radius:   10px;
+  --border-radius:   12px;
   --border-radius-lg: 16px;
-  --shadow-card:     0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-card:     0 4px 30px rgba(0, 0, 0, 0.4);
+  --font-family:     'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:       'JetBrains Mono', monospace;
 
   /* ── Spacing ─────────────────────────────── */
   --gap-xs:          4px;
@@ -42,10 +52,6 @@
   --gap-md:          16px;
   --gap-lg:          24px;
   --gap-xl:          32px;
-
-  /* ── Typography ──────────────────────────── */
-  --font-family:     'Inter', -apple-system, sans-serif;
-  --font-mono:       'JetBrains Mono', 'Fira Code', monospace;
 }
 
 * {
@@ -55,23 +61,24 @@
 }
 
 body {
-  background-color: var(--bg-primary);
+  background-color: var(--surface-0);
   color: var(--text-primary);
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   line-height: 1.5;
+  overflow-x: hidden;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: var(--surface-0);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -80,17 +87,16 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--bg-tertiary);
+  background: var(--surface-4);
 }
 
 /* Global utility classes for styling the dashboard */
 .app-container {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  background-color: var(--surface-0);
 }
 
-/* VS Code Inspired styling elements */
 .code-font {
   font-family: var(--font-mono);
 }
@@ -98,7 +104,7 @@ body {
 a {
   color: var(--accent-blue);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 a:hover {
@@ -109,23 +115,24 @@ button {
   cursor: pointer;
   border: none;
   font-family: var(--font-family);
+  outline: none;
 }
 
 input, select, textarea {
   font-family: var(--font-family);
-  background-color: var(--bg-tertiary);
+  background-color: var(--surface-1);
   border: 1px solid var(--border-color);
   color: var(--text-accent);
   border-radius: var(--border-radius-sm);
   padding: 10px 14px;
   font-size: 0.95rem;
   transition: all 0.2s ease;
+  outline: none;
 }
 
 input:focus, select:focus, textarea:focus {
-  outline: none;
   border-color: var(--accent-green);
-  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.15);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
 }
 
 /* Grid Layouts */
@@ -161,18 +168,22 @@ input:focus, select:focus, textarea:focus {
   }
 }
 
-/* Premium Card Design */
+/* Premium Card Design with Glassmorphism */
 .card {
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-lg);
   padding: var(--gap-lg);
   box-shadow: var(--shadow-card);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .card:hover {
-  border-color: rgba(74, 222, 128, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  transform: translateY(-2px);
 }
 
 .card-title {
@@ -208,25 +219,27 @@ input:focus, select:focus, textarea:focus {
   font-weight: 500;
   font-size: 0.95rem;
   border-radius: var(--border-radius-sm);
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .btn-primary {
   background-color: var(--accent-green);
-  color: #111;
+  color: #000;
+  font-weight: 600;
 }
 
 .btn-primary:hover {
-  background-color: #38bdf8;
-  box-shadow: 0 0 12px rgba(74, 222, 128, 0.3);
+  background-color: #34d399;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.3);
 }
 
 .btn-secondary {
-  background-color: var(--bg-tertiary);
+  background-color: var(--surface-4);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
 }
 
 .btn-secondary:hover {
   background-color: var(--border-color);
+  color: var(--text-accent);
 }
