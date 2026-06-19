@@ -243,3 +243,33 @@ input:focus, select:focus, textarea:focus {
   background-color: var(--border-color);
   color: var(--text-accent);
 }
+
+/* ── Print Media Overrides ────────────────── */
+@media print {
+  body, html {
+    background: #FFF !important;
+    color: #000 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .app-container {
+    display: block !important;
+    background: none !important;
+    min-height: auto !important;
+  }
+
+  main {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
