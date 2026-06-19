@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   BarChart2,
@@ -18,11 +18,11 @@ const NAV_ITEMS = [
   { to: '/reports', label: 'Reports', icon: FileText },
 ];
 
-export const Sidebar = () => {
+export const Sidebar = React.memo(() => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const navigate = useNavigate();
 
-  // Efficiency: parse once on mount instead of on every collapse/expand render cycle.
+  // Efficiency: Parse localStorage once on mount instead of on every collapse/expand render cycle.
   const user = useMemo(() => {
     try {
       const stored = localStorage.getItem('user');
@@ -32,17 +32,20 @@ export const Sidebar = () => {
     }
   }, []);
 
-  const handleLogout = () => {
+  // Efficiency: Memoize logout callback to prevent recreation of function references
+  const handleLogout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     navigate('/login');
-  };
+  }, [navigate]);
+
+  // Efficiency: Memoize toggle callback to prevent recreation of toggle references
+  const handleToggle = useCallback(() => {
+    setIsCollapsed((prev) => !prev);
+  }, []);
 
   return (
-    <aside
-      className="desktop-sidebar no-print sidebar-wrapper"
-      style={{ width: isCollapsed ? '72px' : '260px' }}
-    >
+    <aside className={`desktop-sidebar no-print sidebar-wrapper ${isCollapsed ? 'collapsed' : ''}`}>
       <div>
         {/* Logo Brand Title */}
         <div className="sidebar-brand">
@@ -70,16 +73,9 @@ export const Sidebar = () => {
         </nav>
       </div>
 
-      {/* User Info Footing Panel */}
+      {/* Footer User Profile & Collapse Toggle */}
       <div className="sidebar-footer">
-        <div
-          className="sidebar-user"
-          style={{
-            padding: isCollapsed ? '8px' : '8px 12px',
-            backgroundColor: isCollapsed ? 'transparent' : 'rgba(255, 255, 255, 0.02)',
-            border: isCollapsed ? 'none' : '1px solid #1C1C28',
-          }}
-        >
+        <div className={`sidebar-user ${isCollapsed ? 'collapsed' : ''}`}>
           <div className="sidebar-avatar">
             {user.name ? user.name[0].toUpperCase() : 'E'}
           </div>
@@ -102,7 +98,7 @@ export const Sidebar = () => {
 
         {/* Collapse Trigger chevron */}
         <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
+          onClick={handleToggle}
           className="sidebar-toggle-btn"
           aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
@@ -111,6 +107,8 @@ export const Sidebar = () => {
       </div>
     </aside>
   );
-};
+});
+
+Sidebar.displayName = 'Sidebar';
 
 export default Sidebar;
