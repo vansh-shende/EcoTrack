@@ -63,9 +63,21 @@ export const ReportsPage = () => {
     );
   }
 
-  const totalCo2 = summary?.totalCo2 || 0;
-  const grade = summary?.grade || 'N/A';
+  // Extract data from the API wrapper: { success, message, data: { total_co2_kg, ... } }
+  const summaryData = summary?.data || summary || {};
+  const totalCo2 = summaryData.total_co2_kg || 0;
+  const dailyAvg = summaryData.daily_average_kg || (totalCo2 / 30);
+  const logCount = summaryData.log_count || 0;
+
+  // Compute grade locally based on weekly projection (Paris 1.5°C target = 38.5 kg/week)
+  const weeklyProjection = (totalCo2 / 30) * 7;
+  const grade = weeklyProjection <= 20 ? 'A' : weeklyProjection <= 38.5 ? 'B' : weeklyProjection <= 60 ? 'C' : 'D';
+
   const offsetEstimate = ((totalCo2 / 1000) * 12).toFixed(2); // $12 per ton
+
+  // Extract categories from breakdown wrapper: { success, message, data: { categories: [...] } }
+  const breakdownData = breakdown?.data || breakdown || {};
+  const categories = breakdownData.categories || [];
 
   return (
     <div style={{ padding: '24px', maxWidth: '1000px', margin: '0 auto', width: '100%' }} className="print-container">
@@ -188,14 +200,14 @@ export const ReportsPage = () => {
           <div className="print-card" style={{ padding: '20px', backgroundColor: '#13131F', border: '1px solid #232334', borderRadius: '8px' }}>
             <p style={{ color: '#A1A1AA', fontSize: '13px', marginBottom: '6px' }}>Daily Footprint Average</p>
             <h3 style={{ color: '#FFF', fontSize: '24px', fontWeight: '700' }}>
-              {(totalCo2 / 30).toFixed(2)} <span style={{ fontSize: '14px', color: '#8E8E93' }}>kg/day</span>
+              {dailyAvg.toFixed(2)} <span style={{ fontSize: '14px', color: '#8E8E93' }}>kg/day</span>
             </h3>
           </div>
 
           <div className="print-card" style={{ padding: '20px', backgroundColor: '#13131F', border: '1px solid #232334', borderRadius: '8px' }}>
-            <p style={{ color: '#A1A1AA', fontSize: '13px', marginBottom: '6px' }}>Seeded Log Records</p>
+            <p style={{ color: '#A1A1AA', fontSize: '13px', marginBottom: '6px' }}>Total Log Records</p>
             <h3 style={{ color: '#FFF', fontSize: '24px', fontWeight: '700' }}>
-              {logs.length} <span style={{ fontSize: '14px', color: '#8E8E93' }}>entries</span>
+              {logCount || logs.length} <span style={{ fontSize: '14px', color: '#8E8E93' }}>entries</span>
             </h3>
           </div>
         </div>
@@ -206,14 +218,15 @@ export const ReportsPage = () => {
             Emission Share Breakdown
           </h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {breakdown?.map((item) => {
-              const percentage = parseFloat(item.percentage);
+            {categories.map((item) => {
+              const percentage = parseFloat(item.percentage) || 0;
+              const co2Value = parseFloat(item.total_co2_kg) || 0;
               return (
                 <div key={item.category} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
                     <span style={{ color: '#E4E4E7', textTransform: 'capitalize' }}>{item.category}</span>
                     <span style={{ color: '#FFF', fontWeight: '600' }}>
-                      {item.total_co2.toFixed(1)} kg ({percentage.toFixed(1)}%)
+                      {co2Value.toFixed(1)} kg ({percentage.toFixed(1)}%)
                     </span>
                   </div>
                   <div style={{ width: '100%', height: '8px', backgroundColor: '#11111A', borderRadius: '4px', overflow: 'hidden' }}>
