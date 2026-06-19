@@ -81,7 +81,7 @@ export const ReportsPage = () => {
   const categories = breakdownData.categories || [];
 
   return (
-    <div style={{ padding: '24px', maxWidth: '1000px', margin: '0 auto', width: '100%' }} className="print-container">
+    <div className="page-container print-container">
       {/* Print-specific style overrides */}
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
@@ -190,7 +190,7 @@ export const ReportsPage = () => {
         </div>
 
         {/* Audit Metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+        <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
           <div className="print-card" style={{ padding: '20px', backgroundColor: '#13131F', border: '1px solid #232334', borderRadius: '8px' }}>
             <p style={{ color: '#A1A1AA', fontSize: '13px', marginBottom: '6px' }}>Total Monthly Footprint</p>
             <h3 style={{ color: '#FFF', fontSize: '24px', fontWeight: '700' }}>

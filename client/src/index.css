@@ -244,6 +244,30 @@ input:focus, select:focus, textarea:focus {
   color: var(--text-accent);
 }
 
+/* ── Responsive Screen Overrides ─────────── */
+@media (max-width: 768px) {
+  .desktop-sidebar {
+    display: none !important;
+  }
+  .mobile-header {
+    display: flex !important;
+  }
+  .app-container {
+    flex-direction: column !important;
+  }
+  main {
+    height: calc(100vh - 60px) !important;
+  }
+  /* Force grid containers into single-column layouts */
+  .grid-2, .grid-3, .grid-4 {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .page-container {
+    padding: 16px !important;
+  }
+}
+
 /* ── Print Media Overrides ────────────────── */
 @media print {
   body, html {

@@ -40,7 +40,7 @@ export const SummaryCards = ({ summary, loading = false }) => {
   const isCardLoading = loading || !summary;
 
   return (
-    <div style={{ gridColumn: 'span 12', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+    <div className="grid-4" style={{ gridColumn: 'span 12', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
       
       {/* CARD 1: Total Emissions */}
       <KPICard

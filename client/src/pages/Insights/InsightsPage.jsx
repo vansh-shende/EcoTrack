@@ -33,7 +33,7 @@ export const InsightsPage = () => {
 
   if (loading) {
     return (
-      <div style={{ padding: '32px', maxWidth: '1200px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      <div className="page-container" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
         {/* Shimmer CSS */}
         <style dangerouslySetInnerHTML={{ __html: `
           @keyframes shimmer {
@@ -70,7 +70,7 @@ export const InsightsPage = () => {
 
   if (error) {
     return (
-      <div style={{ padding: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: '16px' }}>
+      <div className="page-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: '16px' }}>
         <ShieldAlert size={48} style={{ color: '#EF4444' }} />
         <h3 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#FFF', margin: 0 }}>Calculation Error</h3>
         <p style={{ color: '#A1A1AA', textAlign: 'center', maxWidth: '400px', margin: 0, fontSize: '0.9rem' }}>{error}</p>
@@ -107,7 +107,7 @@ export const InsightsPage = () => {
   };
 
   return (
-    <div style={{ padding: '32px', maxWidth: '1200px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: '32px', color: '#FFF' }}>
+    <div className="page-container" style={{ display: 'flex', flexDirection: 'column', gap: '32px', color: '#FFF' }}>
       
       {/* HEADER SECTION */}
       <motion.div
@@ -152,6 +152,7 @@ export const InsightsPage = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
+        className="grid-2"
         style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}
       >
         
@@ -340,7 +341,8 @@ export const InsightsPage = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}
+            className="grid-2"
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}
           >
             {recommendations?.map((rec, index) => (
               <motion.div variants={itemVariants} key={index}>

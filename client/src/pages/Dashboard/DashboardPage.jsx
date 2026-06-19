@@ -49,7 +49,7 @@ export const DashboardPage = () => {
   };
 
   return (
-    <div style={{ padding: '32px', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
+    <div className="page-container">
       {/* HEADER SECTION */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -193,7 +193,7 @@ export const DashboardPage = () => {
           </motion.div>
 
           {/* Row 2: Charts (Trend & Category) */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+          <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
             {/* Trend Chart */}
             <motion.div variants={itemVariants} className="card">
               <div className="card-title">
@@ -212,7 +212,7 @@ export const DashboardPage = () => {
           </div>
 
           {/* Row 3: Weekly comparison & recent activity logs */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+          <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
             {/* Weekly Bar Chart */}
             <motion.div variants={itemVariants} className="card">
               <div className="card-title">

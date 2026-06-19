@@ -24,7 +24,7 @@ export const Sidebar = () => {
 
   return (
     <aside
-      className="no-print"
+      className="desktop-sidebar no-print"
       style={{
         width: isCollapsed ? '72px' : '260px',
         backgroundColor: '#0F0F14',
