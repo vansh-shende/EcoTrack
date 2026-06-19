@@ -7,6 +7,7 @@ export const ReportsPage = () => {
   const { summary, breakdown, loading, error, refresh } = useDashboard('month');
   const [exporting, setExporting] = useState(false);
   const [logs, setLogs] = useState([]);
+  const [currency, setCurrency] = useState('USD');
 
   // Fetch all user logs for CSV export
   useEffect(() => {
@@ -263,9 +264,62 @@ export const ReportsPage = () => {
               Your net carbon impact can be set to zero by contributing to certified Gold Standard projects.
             </p>
           </div>
-          <div style={{ textAlign: 'right' }}>
-            <p style={{ color: '#8E8E93', fontSize: '12px' }}>Estimate Offset Cost</p>
-            <p style={{ color: '#10B981', fontSize: '20px', fontWeight: '700' }}>${offsetEstimate} USD</p>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+            {/* Currency Toggle */}
+            <button
+              onClick={() => setCurrency(currency === 'USD' ? 'INR' : 'USD')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: '#11111A',
+                border: '1px solid #2D2D42',
+                borderRadius: '20px',
+                padding: '3px',
+                cursor: 'pointer',
+                width: '100px',
+                position: 'relative',
+                height: '28px',
+              }}
+            >
+              <div style={{
+                position: 'absolute',
+                width: '48px',
+                height: '22px',
+                backgroundColor: '#10B981',
+                borderRadius: '16px',
+                transition: 'transform 0.25s ease',
+                transform: currency === 'USD' ? 'translateX(0px)' : 'translateX(46px)',
+              }} />
+              <span style={{
+                flex: 1,
+                textAlign: 'center',
+                fontSize: '11px',
+                fontWeight: '700',
+                color: currency === 'USD' ? '#FFF' : '#8E8E93',
+                position: 'relative',
+                zIndex: 1,
+                transition: 'color 0.2s',
+              }}>USD</span>
+              <span style={{
+                flex: 1,
+                textAlign: 'center',
+                fontSize: '11px',
+                fontWeight: '700',
+                color: currency === 'INR' ? '#FFF' : '#8E8E93',
+                position: 'relative',
+                zIndex: 1,
+                transition: 'color 0.2s',
+              }}>INR</span>
+            </button>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{ color: '#8E8E93', fontSize: '12px' }}>Estimate Offset Cost</p>
+              <p style={{ color: '#10B981', fontSize: '20px', fontWeight: '700' }}>
+                {currency === 'USD'
+                  ? `$${offsetEstimate} USD`
+                  : `₹${(parseFloat(offsetEstimate) * 83.5).toFixed(2)} INR`
+                }
+              </p>
+            </div>
           </div>
         </div>
 
